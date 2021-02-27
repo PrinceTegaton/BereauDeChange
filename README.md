@@ -4,6 +4,7 @@ Presentation is built with MVC Core, HTML, jQuery and Bootstrap.
 
 - Daily transfer limit of 500.00
 - Payment is flexible done with fake response to simulate a real API call
+- During transfer, if you get 'Debit error', click the button until you get success
 - Dashboard can onlyshow a max of 6 transactions
 - Admin dashboard can only show max of 20 records for transfers and users
 
