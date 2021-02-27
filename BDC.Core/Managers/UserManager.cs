@@ -70,7 +70,7 @@ namespace BDC.Core.Managers
             account.UserId = userId;
             var acc = _accountContext.Add(account);
 
-            return Result<Guid>.Success("Account created successfully");
+            return Result<Guid>.Success(userId, "Account created successfully");
         }
     }
 }

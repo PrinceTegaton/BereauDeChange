@@ -15,7 +15,7 @@ namespace BDC.Core.Managers
         private readonly IPaymentEngineAdapter _paymentEngine;
         private readonly IFxAdapter _fxAdapter;
 
-        private const decimal dailyLimit = 200m;
+        private const decimal dailyLimit = 500m;
 
         public TransferManager(IPaymentEngineAdapter paymentEngine, IFxAdapter fxAdapter)
         {

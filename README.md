@@ -1,7 +1,8 @@
-### Bereau de' Change Web App
+## Bereau de' Change Web App
 This is a simple web app to FX funds transfer from local currency. Built with asp.net core 3.1 (C#) and JSON datastore using a custom built and generic DataContext manager which simulates a real db instance with .json files.
 Presentation is built with MVC Core, HTML, jQuery and Bootstrap.
 
+- Daily transfer limit of 500.00
 - Payment is flexible done with fake response to simulate a real API call
 - Dashboard can onlyshow a max of 6 transactions
 - Admin dashboard can only show max of 20 records for transfers and users

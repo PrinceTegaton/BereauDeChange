@@ -16,7 +16,7 @@ namespace BDC.Core.Utils
             DataPath = $"{AppDomain.CurrentDomain.BaseDirectory}\\DataStore\\{typeof(T).Name}.json";
             if (!File.Exists(DataPath))
             {
-                string dir = Path.GetFullPath(DataPath);
+                string dir = Path.GetDirectoryName(DataPath);
                 if (!Directory.Exists(dir)) 
                     Directory.CreateDirectory(dir);
 
