@@ -43,34 +43,34 @@ namespace BDC.Core.Managers
             return Result<User>.Success(user, "Login successful");
         }
 
-        public Result<bool> Create(User user, Account account)
+        public Result<Guid> Create(User user, Account account)
         {
-            if (string.IsNullOrEmpty(user.Name)) return Result<bool>.Failure("Full name is required");
-            if (string.IsNullOrEmpty(user.EmailAddress)) return Result<bool>.Failure("Email address is required");
-            if (string.IsNullOrEmpty(user.Password)) return Result<bool>.Failure("Password is required");
-            if (string.IsNullOrEmpty(account.AccountNumber)) return Result<bool>.Failure("Bank account number is required");
+            if (string.IsNullOrEmpty(user.Name)) return Result<Guid>.Failure("Full name is required");
+            if (string.IsNullOrEmpty(user.EmailAddress)) return Result<Guid>.Failure("Email address is required");
+            if (string.IsNullOrEmpty(user.Password)) return Result<Guid>.Failure("Password is required");
+            if (string.IsNullOrEmpty(account.AccountNumber)) return Result<Guid>.Failure("Bank account number is required");
 
 
             // validate
             var users = _userContext.GetAll();
             if (users.FirstOrDefault(a => a.EmailAddress.ToLower() == user.EmailAddress.ToLower()) != null)
-                return Result<bool>.Failure($"Sorry, the email address '{user.EmailAddress}' already exist");
+                return Result<Guid>.Failure($"Sorry, the email address '{user.EmailAddress}' already exist");
 
             if (users.FirstOrDefault(a => a.MobileNumber == user.MobileNumber) != null)
-                return Result<bool>.Failure($"Sorry, the mobile number '{user.MobileNumber}' already exist");
+                return Result<Guid>.Failure($"Sorry, the mobile number '{user.MobileNumber}' already exist");
 
             var accounts = _accountContext.GetAll();
             if (accounts.FirstOrDefault(a => a.BankCode == account.BankCode && a.AccountNumber == account.AccountNumber) != null)
-                return Result<bool>.Failure($"The supplied account number already exist");
+                return Result<Guid>.Failure($"The supplied account number already exist");
 
             var userId = _userContext.Add(user);
             if (userId == Guid.Empty)
-                return Result<bool>.Failure("Unable to create account at the moment");
+                return Result<Guid>.Failure("Unable to create account at the moment");
 
             account.UserId = userId;
             var acc = _accountContext.Add(account);
 
-            return Result<bool>.Success("Account created successfully");
+            return Result<Guid>.Success("Account created successfully");
         }
     }
 }

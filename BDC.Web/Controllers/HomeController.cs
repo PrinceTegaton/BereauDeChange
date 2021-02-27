@@ -40,7 +40,7 @@ namespace BDC.Web.Controllers
 
             if (StaticCache.Banks == null)
             {
-                StaticCache.Banks = _accountManager.GetBanks(); ;
+                StaticCache.Banks = _accountManager.GetBanks();
             }
             
             var pageModel = new IndexPageViewModel
@@ -111,6 +111,11 @@ namespace BDC.Web.Controllers
                 AccountNumber = model.AccountNo,
                 Status = AccountStatus.Active
             });
+
+            if (res.IsSuccess)
+            {
+                StaticCache.User = _userManager.Get(res.Data);
+            }
 
             return Json(res);
         }

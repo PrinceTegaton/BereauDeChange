@@ -9,17 +9,21 @@ namespace BDC.Core.Utils
 {
     public class DataContext<T> where T : BaseModel
     {
-        private string Path;
+        private string DataPath;
 
         private string ReadRaw()
         {
-            Path = $"{AppDomain.CurrentDomain.BaseDirectory}\\DataStore\\{typeof(T).Name}.json";
-            if (!File.Exists(Path))
+            DataPath = $"{AppDomain.CurrentDomain.BaseDirectory}\\DataStore\\{typeof(T).Name}.json";
+            if (!File.Exists(DataPath))
             {
-                File.WriteAllText(Path, Seed());
+                string dir = Path.GetFullPath(DataPath);
+                if (!Directory.Exists(dir)) 
+                    Directory.CreateDirectory(dir);
+
+                File.WriteAllText(DataPath, Seed());
             }
 
-            var fileStr = File.ReadAllText(Path);
+            var fileStr = File.ReadAllText(DataPath);
             return fileStr;
         }
 
@@ -62,7 +66,7 @@ namespace BDC.Core.Utils
                 data.Add(item);
 
                 raw = JsonConvert.SerializeObject(data);
-                File.WriteAllText(Path, raw);
+                File.WriteAllText(DataPath, raw);
 
                 return item.Id;
             }
@@ -84,7 +88,7 @@ namespace BDC.Core.Utils
                 data.Add(item);
 
                 raw = JsonConvert.SerializeObject(data);
-                File.WriteAllText(Path, raw);
+                File.WriteAllText(DataPath, raw);
 
                 return true;
             }
