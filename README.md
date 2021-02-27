@@ -7,7 +7,7 @@ Presentation is built with MVC Core, HTML, jQuery and Bootstrap.
 - Admin dashboard can only show max of 20 records for transfers and users
 - 
 
-#### Features and Highlights
+### Features and Highlights
 - Create account
 - Login
 - Transfer funds (Local to FX)
@@ -20,13 +20,13 @@ Presentation is built with MVC Core, HTML, jQuery and Bootstrap.
 	- View transfers
 	- View users
 
-#### Setup
+### Setup
 On start of the application all neccessary store files are being created to /DataStore/{schema}.json
 
-#### State Management
+### State Management
 Caching is carried out with Static objects references to enhance performances. On user logout, all cache items are cleared
 
-#### User Access
+### User Access
 **Administrator**
 Email: admin@gmail.com
 Password: 12345
