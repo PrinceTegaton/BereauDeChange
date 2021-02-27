@@ -1,0 +1,232 @@
+﻿@model DashboardViewModel
+@{
+    ViewData["Title"] = "Dashboard";
+}
+
+<style>
+    .form-control {
+        background-color: #fafafa !important;
+    }
+
+    table.table-fit {
+        table-layout: auto !important;
+    }
+
+        table.table-fit thead th, table.table-fit tfoot th {
+            width: auto !important;
+        }
+
+        table.table-fit tbody td, table.table-fit tfoot td {
+            width: auto !important;
+        }
+</style>
+
+<div class="text-center">
+    <h1 class="display-4">Hello, @Model.User.Name.Split(' ')[0]</h1>
+    <p>It's a good day to send funds!</p>
+</div>
+
+<div class="row mt-5">
+    <div class="col-5">
+        <form id="form-transfer" method="post">
+            <div id="fail-msg" class="alert alert-danger" style="display:none"></div>
+
+            <div id="beneficiaryinfo" class="rounded p-4 shadow mb-3 small" style="background-color:#f2f2f2">
+                <h3 class="text-secondary">Start Fx Transfer</h3>
+                <p>Send money from your Naira account to anywhere in the world</p>
+
+                <div class="form-group rounded p-3" style="background-color:#8ec491">
+                    <strong>My Account</strong><br />
+                    @Model.Account.BankName<br />
+                    @Model.Account.AccountName (@Model.Account.AccountNumber) - <a href="#" class="small">Change account</a>
+                </div>
+
+                <p><strong>Provide beneficiary details</strong></p>
+                <div class="form-group">
+                    <table>
+                        <tr>
+                            <td>
+                                <label for="swiftcode">SWIFT Code</label>
+                                <input type="text" id="swiftcode" name="swiftcode" class="form-control form-control-sm text-uppercase" maxlength="20" required />
+                            </td>
+                            <td>
+                                <label for="country">Country</label>
+                                <select id="country" name="country" class="form-control form-control-sm">
+                                    <option value="USA">United State of America</option>
+                                    <option value="GB">United Kingdom</option>
+                                    <option value="CA">Canada</option>
+                                    <option value="CH">China</option>
+                                    <option value="JP">Japan</option>
+                                    <option value="DE">Denmark</option>
+                                    <option value="BR">Brazil</option>
+                                </select>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+
+                <div class="form-group">
+                    <label for="receivername">Receiver Name</label>
+                    <input type="text" id="receivername" name="receivername" class="form-control form-control-sm text-capitalize" maxlength="20" required />
+                </div>
+
+                <div class="form-group">
+                    <label for="accountno">Account Number</label>
+                    <input type="text" id="accountno" name="accountno" class="form-control form-control-sm" maxlength="20" required />
+                </div>
+
+                <div class="form-group">
+                    <table>
+                        <tr>
+                            <td>
+                                <label for="amount">Amount</label>
+                                <input type="number" id="amount" name="amount" class="form-control form-control-sm mr-3" min="1" max="1000" required />
+                            </td>
+                            <td><div class="mr-5"></div></td>
+                            <td>
+                                <label for="currencylist">Currency</label>
+                                <select id="currencylist" name="currencylist" class="form-control form-control-sm" required>
+                                    <option>---</option>
+                                    @foreach (var i in Model.CurrencyAndRate)
+                                    {
+                                        <option value="@i.Value">@i.Key</option>
+                                    }
+                                </select>
+                                <input type="hidden" id="currency" name="currency" value="" />
+                            </td>
+                            <td>
+                                <label for="rate" class="text-secondary">Rate</label>
+                                <input type="text" id="rate" class="form-control form-control-sm" value="#.##" style="width:80px" disabled />
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+
+                <div class="form-group">
+                    <label for="name" class="small">Do you wish to notify your beneficiary that funds is on the way?</label>
+                    <input type="email" id="email" name="email" class="form-control form-control-sm border-primary" placeholder="Enter beneficiary email (optional)" />
+                </div>
+
+                <div class="form-group">
+                    <input type="checkbox" id="savebeneficiary" name="savebeneficiary" />
+                    <label for="savebeneficiary">Save beneficiary</label>
+                </div>
+
+                <div class="form-group">
+                    <button type="button" id="btn-auth" class="btn btn-primary btn-sm">Proceed...</button>
+                </div>
+            </div>
+
+            <div id="auth" class="bg-white rounded p-4 shadow" style="display:none">
+                <h3 class="text-secondary">Confirm Transfer</h3>
+                <p>Provide your 4-digit transaction PIN to authorize this transfer</p>
+
+                <div class="form-group mt-4">
+                    <label for="pin">PIN</label>
+                    <input type="password" id="pin" name="pin" class="form-control form-control-sm" maxlength="4" style="width:250px" required />
+                </div>
+
+                <div class="form-group">
+                    <button type="submit" class="btn btn-success btn-sm">Transfer</button>
+                    <button type="button" id="btn-back" class="btn btn-secondary btn-sm">Back</button>
+                    <button type="reset" class="btn btn-danger btn-sm float-right" onclick="location.reload()">Cancel</button>
+                </div>
+            </div>
+
+            <div id="success" class="bg-white rounded p-4 shadow" style="display:none">
+                <h3 class="text-success">Successful</h3>
+                <p>Your transfer is being processed. You will be notified of the status of your transaction immidiately it's completed.</p>
+
+                <div id="refnumber" class="mt-4 alert alert-success">
+                    <span class="small">Reference Number</span><br />
+                    <span id="msg" class="font-weight-bold text-uppercase"></span>
+                </div>
+
+                <div class="mt-4 small">
+                    If you provided beneficiary email address, he/she will be notified that the fund is on the way.
+                </div>
+
+                <div class="mt-5">
+                    <a href="#" onclick="location.reload()">Go to Dashboard</a>
+                </div>
+            </div>
+
+            <div id="failed" style="display:none">
+                <h3 class="text-danger">Failed</h3>
+                <p>Your transfer has failed</p>
+
+                <div id="msg" class="mt-4 alert alert-danger">
+                </div>
+
+                <div class="mt-5">
+                    <a href="#" onclick="location.reload()">Go to Dashboard</a>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <div class="col-1"></div>
+
+    <div class="col-6">
+        <h3 class="text-secondary">Transfer History</h3>
+
+        <div class="table-responsive">
+            @if (Model.TransferHistory != null && Model.TransferHistory.Count() > 0)
+            {
+                <table class="table table-bordered table-striped bg-white small table-fit" style="width:100%">
+                    <tr>
+                        <th>Account Name</th>
+                        <th>Account No.</th>
+                        <th>Amount</th>
+                        <th>Status</th>
+                        <th>Date</th>
+                    </tr>
+                    @foreach (var i in Model.TransferHistory)
+                    {
+                        <tr>
+                            <td>@i.DestinationAccountName</td>
+                            <td>@i.DestinationAccountNumber</td>
+                            <td><span>@i.DestinationCurrency @i.Amount.ToString("N2")</span></td>
+                            <td><span class="badge badge-pill @BDC.Web.Controllers.HomeController.GetTransactionStatusColor(i.Status)" title="@(i.CreditResponse ?? i.DebitResponse)">@i.Status.ToString()</span></td>
+                            <td>@i.CreatedOn.ToString("MMM dd yyyy")</td>
+                        </tr>
+                    }
+                </table>
+                <nav aria-label="Page navigation example">
+                    <ul class="pagination">
+                        <li class="page-item">
+                            <a class="page-link" href="#" aria-label="Previous">
+                                <span aria-hidden="true">&laquo;</span>
+                                <span class="sr-only">Previous</span>
+                            </a>
+                        </li>
+                        <li class="page-item"><a class="page-link" href="#">1</a></li>
+                        <li class="page-item"><a class="page-link" href="#">2</a></li>
+                        <li class="page-item"><a class="page-link" href="#">3</a></li>
+                        <li class="page-item">
+                            <a class="page-link" href="#" aria-label="Next">
+                                <span aria-hidden="true">&raquo;</span>
+                                <span class="sr-only">Next</span>
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+            }
+            else
+            {
+                <table class="table table-bordered table-striped bg-white small">
+                    <tr>
+                        <th>Account Name</th>
+                        <th>Account No.</th>
+                        <th>Amount</th>
+                        <th>Status</th>
+                        <th>Date</th>
+                    </tr>
+                    <tr>
+                        <td class="p-3" colspan="4">You have not made any transfer..</td>
+                    </tr>
+                </table>
+            }
+        </div>
+    </div>
+</div>

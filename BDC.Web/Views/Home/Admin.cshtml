@@ -1,0 +1,167 @@
+﻿@model AdminPageViewModel
+@{
+    ViewData["Title"] = "Admin Dashboard";
+}
+
+<style>
+    .form-control {
+        background-color: #fafafa !important;
+    }
+
+    table.table-fit {
+        table-layout: auto !important;
+    }
+
+        table.table-fit thead th, table.table-fit tfoot th {
+            width: auto !important;
+        }
+
+        table.table-fit tbody td, table.table-fit tfoot td {
+            width: auto !important;
+        }
+</style>
+
+<div class="text-center">
+    <h1 class="display-4">Hey, @Model.User.Name.Split(' ')[0]</h1>
+    <p>Welcome to One-Xchange administrator panel</p>
+</div>
+
+<div class="row mt-5">
+    <div class="col-12">
+        <h3 class="text-secondary">Transfers</h3>
+
+        <div class="table-responsive">
+            @if (Model.Transactions != null && Model.Transactions.Count() > 0)
+            {
+                <table class="table table-bordered table-striped bg-white small table-fit" style="width:100%">
+                    <tr>
+                        <th>Account Name</th>
+                        <th>Account No.</th>
+                        <th>Amount</th>
+                        <th>Rate</th>
+                        <th>Country</th>
+                        <th>Status</th>
+                        <th>Date</th>
+                        <th>Source Bank</th>
+                        <th>SWIFT Code</th>
+                        <th>Payment Ref.</th>
+                    </tr>
+                    @foreach (var i in Model.Transactions)
+                    {
+                        <tr>
+                            <td>@i.DestinationAccountName</td>
+                            <td>@i.DestinationAccountNumber</td>
+                            <td><span>@i.DestinationCurrency @i.Amount.ToString("N2")</span></td>
+                            <td>@i.Rate.ToString("N2")</td>
+                            <td>@i.Country</td>
+                            <td><span class="badge badge-pill @BDC.Web.Controllers.HomeController.GetTransactionStatusColor(i.Status)">@i.Status.ToString()</span></td>
+                            <td>@i.CreatedOn.ToString("MMM dd yyyy")</td>
+                            <td>@i.SourceBankCode</td>
+                            <td>@i.SwiftCode</td>
+                            <td>@(i.CreditResponse ?? i.DebitResponse)</td>
+                        </tr>
+                    }
+                </table>
+                <nav aria-label="Page navigation example">
+                    <ul class="pagination">
+                        <li class="page-item">
+                            <a class="page-link" href="#" aria-label="Previous">
+                                <span aria-hidden="true">&laquo;</span>
+                                <span class="sr-only">Previous</span>
+                            </a>
+                        </li>
+                        <li class="page-item"><a class="page-link" href="#">1</a></li>
+                        <li class="page-item"><a class="page-link" href="#">2</a></li>
+                        <li class="page-item"><a class="page-link" href="#">3</a></li>
+                        <li class="page-item">
+                            <a class="page-link" href="#" aria-label="Next">
+                                <span aria-hidden="true">&raquo;</span>
+                                <span class="sr-only">Next</span>
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+            }
+            else
+            {
+                <table class="table table-bordered table-striped bg-white small">
+                    <tr>
+                        <th>Account Name</th>
+                        <th>Account No.</th>
+                        <th>Amount</th>
+                        <th>Status</th>
+                        <th>Date</th>
+                    </tr>
+                    <tr>
+                        <td class="p-3" colspan="4">No transaction to display..</td>
+                    </tr>
+                </table>
+            }
+        </div>
+    </div>
+</div>
+
+<div class="row mt-5">
+    <div class="col-12">
+        <h3 class="text-secondary">User Profiles</h3>
+
+        <div class="table-responsive">
+            @if (Model.Users != null && Model.Users.Count() > 0)
+            {
+                <table class="table table-bordered table-striped bg-white small table-fit" style="width:100%">
+                    <tr>
+                        <th>Name</th>
+                        <th>Email Address</th>
+                        <th>Mobile No.</th>
+                        <th>Is Admin</th>
+                        <th>Date</th>
+                    </tr>
+                    @foreach (var i in Model.Users)
+                    {
+                        <tr>
+                            <td>@i.Name</td>
+                            <td>@i.EmailAddress</td>
+                            <td>@i.MobileNumber</td>
+                            <td>@i.IsAdmin.ToString()</td>
+                            <td>@i.CreatedOn.ToString("MMM dd yyyy")</td>
+                        </tr>
+                    }
+                </table>
+                <nav aria-label="Page navigation example">
+                    <ul class="pagination">
+                        <li class="page-item">
+                            <a class="page-link" href="#" aria-label="Previous">
+                                <span aria-hidden="true">&laquo;</span>
+                                <span class="sr-only">Previous</span>
+                            </a>
+                        </li>
+                        <li class="page-item"><a class="page-link" href="#">1</a></li>
+                        <li class="page-item"><a class="page-link" href="#">2</a></li>
+                        <li class="page-item"><a class="page-link" href="#">3</a></li>
+                        <li class="page-item">
+                            <a class="page-link" href="#" aria-label="Next">
+                                <span aria-hidden="true">&raquo;</span>
+                                <span class="sr-only">Next</span>
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+            }
+            else
+            {
+                <table class="table table-bordered table-striped bg-white small">
+                    <tr>
+                        <th>Name</th>
+                        <th>Email Address</th>
+                        <th>Mobile No.</th>
+                        <th>Is Admin</th>
+                        <th>Date</th>
+                    </tr>
+                    <tr>
+                        <td class="p-3" colspan="4">No user to display..</td>
+                    </tr>
+                </table>
+            }
+        </div>
+    </div>
+</div>

@@ -1,0 +1,115 @@
+﻿@model IndexPageViewModel
+@{
+    ViewData["Title"] = "Home page";
+}
+
+<style>
+    .form-control {
+        background-color: #fafafa !important;
+    }
+</style>
+
+<div class="text-center">
+    <h1 class="display-4">One-Xchange</h1>
+    <p>Welcome to Paulina's Bereau de' Change company</p>
+</div>
+
+<div class="row mt-5">
+    <div class="col-5">
+        <div id="signin-area">
+            <div class="bg-white rounded p-4 shadow mb-3">
+                <h3 class="text-secondary">Sign-in</h3>
+
+                <form id="form-signin" method="post">
+                    <div class="alert alert-danger" style="display:none"></div>
+                    <div class="form-group">
+                        <label for="loginemail">Email Address</label>
+                        <input type="email" id="loginemail" name="loginemail" class="form-control" maxlength="50" required />
+                    </div>
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <input type="password" id="password" name="password" class="form-control" required />
+                    </div>
+                    <div class="form-group">
+                        <button type="submit" id="btn-login" class="btn btn-primary">Login</button>
+                    </div>
+                </form>
+            </div>
+            <p class="small">
+                <a href="#">I can't remember my password</a><br />
+                Don't have an account? <a href="#" id="switch-signup">Create in one minute!</a>
+            </p>
+        </div>
+
+        <div id="signup-area" style="display:none">
+            <div class="bg-white rounded p-4 shadow mb-3">
+                <h3 class="text-secondary">Sign-up in one minute!</h3>
+                <p class="small">Create a One-Xchange account and send local currency to FX in a few clicks</p>
+
+                <form id="form-signup" method="post" autocomplete="off">
+                    <div class="alert alert-danger" style="display:none"></div>
+                    <div class="form-group">
+                        <label for="name">Enter your fullname</label>
+                        <input type="text" id="name" name="name" class="form-control text-capitalize" maxlength="30" required />
+                    </div>
+
+                    <div class="form-group">
+                        <table>
+                            <tr>
+                                <td>
+                                    <label for="email">Email Address</label>
+                                    <input type="email" id="email" name="email" class="form-control" maxlength="50" required />
+                                </td>
+                                <td>
+                                    <label for="mobileno">Mobile Number</label>
+                                    <input type="tel" id="mobileno" name="mobileno" class="form-control" maxlength="11" required />
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <p class="font-weight-bold text-secondary">Provide your local bank account details</p>
+                    <div class="form-group">
+                        <label for="bank">Select Bank</label>
+                        <select id="bank" name="bank" class="form-control">
+                            @foreach (var i in Model.Banks)
+                            {
+                                <option value="@i.Code">@i.Name</option>
+                            }
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="accountno">Bank Account Number</label>
+                        <input type="text" id="accountno" name="accountno" class="form-control" maxlength="10" required />
+                    </div>
+
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-primary">Finish up</button>
+                    </div>
+                </form>
+            </div>
+            <p class="small">Already have an account? <a href="#" id="switch-signin">Sign-in now!</a></p>
+        </div>
+    </div>
+    <div class="col-2"></div>
+    <div class="col-4">
+        <h4 class="text-secondary">Live Exchange Rates</h4>
+
+        <table class="table table-bordered table-striped bg-white">
+            <tr>
+                <th>Currency</th>
+                <th>Rate</th>
+                <th>Closing Date</th>
+            </tr>
+            @foreach (var i in Model.ExchangeRates)
+            {
+                <tr>
+                    <td>@i.TargetCurrency</td>
+                    <td>@i.Rate.ToString("N2")</td>
+                    <td>@i.TradingEnd.ToString("MMM dd")</td>
+                </tr>
+            }
+        </table>
+    </div>
+</div>
