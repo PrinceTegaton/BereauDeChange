@@ -5,7 +5,6 @@ Presentation is built with MVC Core, HTML, jQuery and Bootstrap.
 - Payment is flexible done with fake response to simulate a real API call
 - Dashboard can onlyshow a max of 6 transactions
 - Admin dashboard can only show max of 20 records for transfers and users
-- 
 
 ### Features and Highlights
 - Create account
