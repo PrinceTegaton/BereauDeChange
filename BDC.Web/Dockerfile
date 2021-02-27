@@ -1,23 +1,16 @@
-#See https://aka.ms/containerfastmode to understand how Visual Studio uses this Dockerfile to build your images for faster debugging.
-
 FROM mcr.microsoft.com/dotnet/core/aspnet:3.1-buster-slim AS base
 WORKDIR /app
-EXPOSE 80
-EXPOSE 443
 
-FROM mcr.microsoft.com/dotnet/core/sdk:3.1-buster AS build
-WORKDIR /src
-COPY ["BDC.Web/BDC.Web.csproj", "BDC.Web/"]
-COPY ["BDC.Core/BDC.Core.csproj", "BDC.Core/"]
-RUN dotnet restore "BDC.Web/BDC.Web.csproj"
-COPY . .
-WORKDIR "/src/BDC.Web"
-RUN dotnet build "BDC.Web.csproj" -c Release -o /app/build
+# Copy csproj and restore as distinct layers
+COPY *.csproj ./
+RUN dotnet restore
 
-FROM build AS publish
-RUN dotnet publish "BDC.Web.csproj" -c Release -o /app/publish
+# Copy everything else and build
+COPY . ./
+RUN dotnet publish -c Release -o out
 
-FROM base AS final
+# Build runtime image
+FROM microsoft/dotnet:3.1-aspnetcore-runtime
 WORKDIR /app
-COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "BDC.Web.dll"]
+COPY --from=base /app/out .
+CMD dotnet BDC.Web.dll
