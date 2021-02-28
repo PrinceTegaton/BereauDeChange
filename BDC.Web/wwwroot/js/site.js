@@ -70,7 +70,7 @@
         var rate = parseFloat($('#rate').val());
         var amountlocal = amount * rate;
 
-        $('#amountlocal').text('₦' + amountlocal);
+        $('#amountlocal').text('₦' + amountlocal.toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ','));
         $('#charges').text('$0.95 (fixed)');
         $('#beneficiaryinfo').hide();
         $('#auth').show();
