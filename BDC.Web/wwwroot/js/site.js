@@ -65,6 +65,13 @@
             $('form #fail-msg').hide();
         }
 
+        // show local amount
+        var amount = parseFloat($('#amount').val());
+        var rate = parseFloat($('#rate').val());
+        var amountlocal = amount * rate;
+
+        $('#amountlocal').text('₦' + amountlocal);
+        $('#charges').text('$0.95 (fixed)');
         $('#beneficiaryinfo').hide();
         $('#auth').show();
     })
