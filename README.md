@@ -31,7 +31,7 @@ Caching is carried out with Static objects references to enhance performances. O
 ### User Access
 **Administrator**
 Email: admin@gmail.com
-Password: 12345
+Password: 123456
 
 **Users**
 First signup from the homepage
