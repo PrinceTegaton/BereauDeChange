@@ -15,8 +15,10 @@ namespace BDC.Core.Adapters
             Random rnd = new Random();
             int val = rnd.Next(1, 4);
 
-            if (val == 1 || val == 2)
+            if (val == 1)
                 return Result<string>.Success("SWFT-" + DateTime.Now.Ticks, "Payment successful");
+            else if (val == 2)
+                return Result<string>.Failure(null, "Source account is blacklisted");
             else if (val == 3)
                 return Result<string>.Failure(null, "PNC: Account cannot receive fund from your country");
 
